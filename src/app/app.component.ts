@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgModel } from '@angular/forms';
 
 @Component({
@@ -6,7 +6,18 @@ import { NgModel } from '@angular/forms';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+
   title = 'app';
-  decimalNumber: number;
+  decimalNumber: any = 'try numbers and strings here';
+  valueType: string;
+
+  ngOnInit(): void {
+    this.valueType = typeof this.decimalNumber;
+  }
+
+  checkType(event){
+    this.valueType = typeof this.decimalNumber;
+  }
+  
 }

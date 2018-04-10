@@ -12,6 +12,10 @@ export class DecimalPipe implements PipeTransform {
       value = value.replace(',', '.');
     }
 
+    if(isNaN(parseFloat(value))){
+      return +0;
+    }
+
     return this.truncateDecimals(+value, 2);
   }
 

@@ -1,8 +1,24 @@
-<!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align:center">
   <h1>
     Decimal & Comma
   </h1>
-  <input type="text" decimalInput [ngModel]="decimalNumber" (ngModelChange)="decimalNumber =$event">
-  <h4>This is your number bruv: {{decimalNumber}}</h4>
+  <h4>
+    This is custom decimal directive
+    <br/> Try combinations of string, number and decimal number with . and , below
+  </h4>
+  <input type="text" pattern="\d*" decimalInput [ngModel]="decimalNumber" (ngModelChange)="decimalNumber =$event; checkType($event)">
+
+  <div>This is your value bruv:
+    <strong>'{{decimalNumber}}'</strong> and your value is of type:
+    <strong>'{{valueType}}'</strong>
+  </div>
+
+  <br>
+  <br>
+  <h4>
+    Try this normal number field also
+    <br/>
+  </h4>
+  <input type="number">
+
 </div>

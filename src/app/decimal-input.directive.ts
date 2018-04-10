@@ -53,7 +53,6 @@ export class DecimalInputDirective {
       this.nonSimultaneousChars.includes(event.key)) {
       return false;
     }
-
   }
 
   @HostListener('blur', ['$event'])
