@@ -58,7 +58,6 @@ export class DecimalInputDirective {
 
   @HostListener('blur', ['$event'])
   onBlur() {
-    //this.el.value = this.decimalPipe.transform(this.el.value);
     this.ngModelChange.emit(this.decimalPipe.transform(this.el.value));
   }
 
