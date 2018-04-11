@@ -11,13 +11,15 @@ export class AppComponent implements OnInit {
   title = 'app';
   decimalNumber: any = 'try numbers and strings here';
   valueType: string;
+  negativeOrPositive = 'Unknown';
+  maxDecimalPart = 5;
 
   ngOnInit(): void {
     this.valueType = typeof this.decimalNumber;
   }
 
-  checkType(event){
+  checkType(event) {
     this.valueType = typeof this.decimalNumber;
+    this.negativeOrPositive = this.decimalNumber ? this.decimalNumber >= 0 ? 'Positive' : 'Negative' : 'Unknown';
   }
-  
 }

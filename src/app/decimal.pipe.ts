@@ -5,18 +5,18 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class DecimalPipe implements PipeTransform {
 
-  transform(value: any): any {
+  transform(value: any, maxDecimalPart: number): any {
 
-    const comma = /[,]/g;    
+    const comma = /[,]/g;
     if (comma.test(value)) {
       value = value.replace(',', '.');
     }
 
-    if(isNaN(parseFloat(value))){
+    if (isNaN(parseFloat(value))) {
       return +0;
     }
 
-    return this.truncateDecimals(+value, 2);
+    return this.truncateDecimals(+value, +maxDecimalPart);
   }
 
   truncateDecimals = function (number, digits) {

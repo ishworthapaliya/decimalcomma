@@ -1,4 +1,4 @@
-import { Directive, HostListener, ElementRef, OnInit, Output, EventEmitter } from '@angular/core';
+import { Directive, HostListener, ElementRef, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { DecimalPipe } from './decimal.pipe';
 
 @Directive({
@@ -7,19 +7,28 @@ import { DecimalPipe } from './decimal.pipe';
 export class DecimalInputDirective {
 
   el: any;
-  nonRepetativeChars = ['.', ','];
+  nonRepetativeChars = ['.', ',', '-'];
   nonSimultaneousChars = ['.', ','];
+  selectionStart: number;
+
   @Output() ngModelChange = new EventEmitter();
 
   constructor(private elementRef: ElementRef, private decimalPipe: DecimalPipe) {
     this.el = this.elementRef.nativeElement;
   }
 
+  @Input() allowNegative: boolean;
+  @Input() maxDecimalPart = 2;
+
+
   @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
 
     // Input value BEFORE current keydown event has been completed
     const inputValue = this.el.value;
+
+    // Update information about cursor position
+    this.setselectionStart();
 
     /* Allow these keys
     * backspace = 8
@@ -33,21 +42,26 @@ export class DecimalInputDirective {
     }
 
     // Pattern to be allowed : number, decimal and comma
-    const allowedChars = /^(?:[0-9.,])+$/;
+    const allowedChars = this.allowNegative ? /^(?:[0-9.,-])+$/ : /^(?:[0-9.,])+$/;
     const inputChar = event.key;
     if (!allowedChars.test(inputChar)) {
       return false;
     }
 
+    /* Allow '-' char only at the begenning of inputValue */
+    if (event.key === '-' && this.selectionStart > 0) {
+      return false;
+    }
+
     /* Prevent non repetative characters
-     * nonRepetativeChars contains the key pressed
+     * nonRepetativeChars contains the key pressed &
      * and keypressed is already present in inputValue */
     if (this.nonRepetativeChars.some(c => c === event.key && inputValue.includes(c))) {
       return false;
     }
 
     /* Prevent non simultaneous characters
-    * input value contains any of the character in nonSimultaneousChars array
+    * input value contains any of the character in nonSimultaneousChars array &
     * nonSimultaneousChars array contains event.key  */
     if (this.nonSimultaneousChars.some(c => inputValue.includes(c)) &&
       this.nonSimultaneousChars.includes(event.key)) {
@@ -57,7 +71,18 @@ export class DecimalInputDirective {
 
   @HostListener('blur', ['$event'])
   onBlur() {
-    this.ngModelChange.emit(this.decimalPipe.transform(this.el.value));
+    this.ngModelChange.emit(this.decimalPipe.transform(this.el.value, this.maxDecimalPart));
+  }
+
+  @HostListener('click', ['$event'])
+  onClick() {
+    this.setselectionStart();
+  }
+
+  setselectionStart(): void {
+    setTimeout(() => {
+      this.selectionStart = this.el.selectionStart;
+    });
   }
 
 }
