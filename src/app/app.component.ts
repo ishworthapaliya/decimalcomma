@@ -20,6 +20,6 @@ export class AppComponent implements OnInit {
 
   checkType(event) {
     this.valueType = typeof this.decimalNumber;
-    this.negativeOrPositive = this.decimalNumber ? this.decimalNumber >= 0 ? 'Positive' : 'Negative' : 'Unknown';
+    this.negativeOrPositive = this.decimalNumber ? (this.decimalNumber >= 0 ? 'Positive' : 'Negative') : 'Unknown';
   }
 }

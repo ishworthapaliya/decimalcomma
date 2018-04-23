@@ -6,9 +6,19 @@ import { DecimalPipe } from './decimal.pipe';
 })
 export class DecimalInputDirective {
 
+  /* Allow these keys
+    * backspace = 8
+    * delete = 46
+    * left arrow	= 37
+    * right arrow	= 39
+    */
+
+  allowedKeyCodes = [8, 37, 39, 46];
+
   el: any;
   nonRepetativeChars = ['.', ',', '-'];
   nonSimultaneousChars = ['.', ','];
+
   selectionStart: number;
 
   @Output() ngModelChange = new EventEmitter();
@@ -30,39 +40,38 @@ export class DecimalInputDirective {
     // Update information about cursor position
     this.setselectionStart();
 
-    /* Allow these keys
-    * backspace = 8
-    * delete = 46
-    * left arrow	= 37
-    * right arrow	= 39
-    */
-    if (event.keyCode === 8 || event.keyCode === 46 ||
-      event.keyCode === 37 || event.keyCode === 39) {
+    if (this.allowedKeyCodes.some(e => e === event.keyCode)) {
       return true;
     }
 
-    // Pattern to be allowed : number, decimal and comma
-    const allowedChars = this.allowNegative ? /^(?:[0-9.,-])+$/ : /^(?:[0-9.,])+$/;
+    /* 
+    * Pattern to be allowed : number, decimal and comma
+    * Note: In IE and Edge, the value for key property for '-' is 'Subtract' & 
+    * ',' is Decimal
+    * */
+    const allowedChars = this.allowNegative ? /^(?:[0-9.,-]|Decimal|Subtract)+$/ : /^(?:[0-9.,]|Decimal)+$/;
     const inputChar = event.key;
     if (!allowedChars.test(inputChar)) {
       return false;
     }
 
     /* Allow '-' char only at the begenning of inputValue */
-    if (event.key === '-' && this.selectionStart > 0) {
+    if ((event.key === '-' || event.key === 'Subtract') && this.selectionStart > 0) {
       return false;
     }
 
     /* Prevent non repetative characters
      * nonRepetativeChars contains the key pressed &
-     * and keypressed is already present in inputValue */
+     * and keypressed is already present in inputValue 
+     * */
     if (this.nonRepetativeChars.some(c => c === event.key && inputValue.includes(c))) {
       return false;
     }
 
     /* Prevent non simultaneous characters
     * input value contains any of the character in nonSimultaneousChars array &
-    * nonSimultaneousChars array contains event.key  */
+    * nonSimultaneousChars array contains event.key  
+    * */
     if (this.nonSimultaneousChars.some(c => inputValue.includes(c)) &&
       this.nonSimultaneousChars.includes(event.key)) {
       return false;
