@@ -6,16 +6,26 @@
     This is custom decimal directive
     <br/> Try combinations of string, number and decimal number with . and , below
   </h4>
-  <input type="text" pattern="\d*" decimalInput allowNegative="true" maxDecimalPart={{maxDecimalPart}} [ngModel]="decimalNumber" (ngModelChange)="decimalNumber =$event; checkType($event)">
+  <div class="numeric-input">
+    <input type="text" decimalInput allowNegative="true" [maxDecimalPart]=maxDecimalPart 
+      [minValue] = this.minValue
+      [maxValue] = this.maxValue
+      [ngModel]="decimalNumber"
+      (ngModelChange)="decimalNumber =$event; checkType($event)">
+  </div>
   <div>
     <span class="title">Your value:</span>
-    <strong class="value">'{{decimalNumber}}'</strong> <br>
+    <strong class="value">'{{decimalNumber}}'</strong>
+    <br>
     <span class="title">Value type:</span>
-    <strong class="value">'{{valueType}}'</strong> <br>
+    <strong class="value">'{{valueType}}'</strong>
+    <br>
     <span class="title">Negative / positive:</span>
-    <strong class="value">'{{negativeOrPositive}}'</strong> <br>
+    <strong class="value">'{{negativeOrPositive}}'</strong>
+    <br>
     <span class="title">Max amount of numbers after decimal sign:</span>
-    <input type="number" [ngModel]="maxDecimalPart" (ngModelChange)="maxDecimalPart =$event"> <br>
+    <input type="number" [ngModel]="maxDecimalPart" (ngModelChange)="maxDecimalPart =$event">
+    <br>
 
   </div>
 

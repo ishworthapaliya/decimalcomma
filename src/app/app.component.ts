@@ -13,6 +13,8 @@ export class AppComponent implements OnInit {
   valueType: string;
   negativeOrPositive = 'Unknown';
   maxDecimalPart = 5;
+  minValue = "0";
+  maxValue = "100";
 
   ngOnInit(): void {
     this.valueType = typeof this.decimalNumber;
